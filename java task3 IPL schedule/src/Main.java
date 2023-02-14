@@ -25,7 +25,7 @@ class IPLSchedule {
         Schedule schedule = new Schedule(new ArrayList<Match>());
         String[] weekDays = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
         String[] weekends = {"Saturday", "Sunday"};
-        int numMatches = (teams.size() - 1) * 2;
+        int numMatches = teams.size()*(teams.size() - 1) /2;
         int dayIndex = 0;
         int teamIndex = 0;
         int weekendIndex = 0;
