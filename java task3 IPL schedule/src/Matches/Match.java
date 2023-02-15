@@ -1,26 +1,33 @@
 package Matches;
-import java.util.Date;
 import java.time.LocalDate;
 import teams.Team;
 
 public class Match {
+    private Team team1;
+    private Team team2;
+    private String venue;
+    private LocalDate date;
 
-    private Team teamA;
-    private Team teamB;
-
-    private String date;
-    public Match(Team teamA, Team teamB,String date ) {
-        this.teamA = teamA;
-        this.teamB = teamB;
+    public Match(Team team1, Team team2, String venue) {
+        this.team1 = team1;
+        this.team2 = team2;
+        this.venue = venue;
         this.date = date;
     }
 
-    public String getDate() {
-        return this.date;
+    public Team getTeam1() {
+        return team1;
     }
 
-    public String getMatch() {
-        return this.teamA.getName() + " vs " + this.teamB.getName() + " -> " + this.date;
+    public Team getTeam2() {
+        return team2;
+    }
+
+    public String getVenue() {
+        return venue;
+    }
+
+    public LocalDate getDate() {
+        return date;
     }
 }
-

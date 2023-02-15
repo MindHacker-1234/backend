@@ -2,54 +2,68 @@ import Matches.Match;
 import Matches.Schedules.Schedule;
 import teams.Team;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 
 class IPLSchedule {
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
         System.out.print("Enter the number of teams: ");
-        int numTeams = sc.nextInt();
-        List<Team> teams = new ArrayList<>();
+        int numTeams = scanner.nextInt();
 
+        scanner.nextLine();
+        List<Team> teams = new ArrayList<>();
         for (int i = 0; i < numTeams; i++) {
-            System.out.print("Enter team name: ");
-            String teamName = sc.next();
-            System.out.print("Enter home ground: ");
-            String homeGround = sc.next();
-            teams.add(new Team(teamName, homeGround));
+            System.out.print("Enter the name of Team " + (i + 1) + ": ");
+            String name = scanner.nextLine();
+            System.out.print("Enter the home ground of Team " + (i + 1) + ": ");
+            String homeGround = scanner.nextLine();
+            teams.add(new Team(name, homeGround));
         }
 
-        Schedule schedule = new Schedule(new ArrayList<Match>());
-        String[] weekDays = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
-        String[] weekends = {"Saturday", "Sunday"};
-        int numMatches = teams.size()*(teams.size() - 1) /2;
-        int dayIndex = 0;
+        Schedule schedule = new Schedule();
+
+
+        int numMatches = numTeams * (numTeams - 1);
         int teamIndex = 0;
         int weekendIndex = 0;
-        LocalDate startdate = LocalDate.now();
-        for (int i = 0; i < numMatches; i++) {
-            if (i == (numMatches/2)) {
-                LocalDate date = startdate.plusDays(i);
-                Match match = new Match(teams.get(teamIndex), teams.get((teamIndex + 1) % teams.size()), weekends[weekendIndex % 2] + " " +  date);
-                schedule.addMatch(match);
+        int dayIndex = 0;
+        int matchesPlayed = 0;
+
+        LocalDate startDate = LocalDate.now();
+        DayOfWeek dayOfWeek = startDate.getDayOfWeek();
+        while (matchesPlayed < numMatches) {
+            Team team1 = teams.get(teamIndex);
+            for (int i = 1; i < numTeams; i++) {
+                int otherTeamIndex = (teamIndex + i) % numTeams;
+                Team team2 = teams.get(otherTeamIndex);
+                if (schedule.canPlay(team1, team2, startDate)) {
+                    Match match = new Match(team1, team2, startDate.format(DateTimeFormatter.ofPattern("EEEE MMMM dd")));
+                    schedule.addMatch(match);
+                    startDate = startDate.plusDays(1);
+                    dayOfWeek = startDate.getDayOfWeek();
+                    matchesPlayed++;
+                    if (dayOfWeek != DayOfWeek.SATURDAY && dayOfWeek != DayOfWeek.SUNDAY) {
+                        i++;
+                    }
+                }
+                if (matchesPlayed == numMatches) {
+                    break;
+                }
+            }
+            if (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY) {
                 weekendIndex++;
-            } else {
-                LocalDate day = startdate.plusDays(i);
-                Match match = new Match(teams.get(teamIndex), teams.get((teamIndex + 1) % teams.size()), weekDays[dayIndex % 5] + " " +  day);
-                schedule.addMatch(match);
-                dayIndex++;
             }
-            teamIndex = (teamIndex + 1) % teams.size();
-            if (dayIndex % 5 == 0) {
-                teamIndex = (teamIndex + 1) % teams.size();
-            }
+            dayIndex++;
+            teamIndex = dayIndex % numTeams;
         }
 
         for (Match match : schedule.getMatches()) {
-            System.out.println(match.getMatch());
+            System.out.println(match.getTeam1().getName() + " vs " + match.getTeam2().getName() + " -> " + match.getDate() + ", " + match.getVenue());
         }
     }
 }
