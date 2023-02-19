@@ -1,0 +1,26 @@
+<html>
+<head>
+    <title>User List</title>
+</head>
+<body>
+<h1>User List</h1>
+<table>
+    <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Location</th>
+        <th>Phone Number</th>
+    </tr>
+    <% for (User user : users) { %>
+    <tr>
+        <td><%= user.getFirstName() %></td>
+        <td><%= user.getLastName() %></td>
+        <td><%= user.getLocation() %></td>
+        <td><%= user.getPhoneNumber() %></td>
+    </tr>
+    <% } %>
+</table>
+<br>
+<a href="index.html">Go Back to Registration</a>
+</body>
+</html>
