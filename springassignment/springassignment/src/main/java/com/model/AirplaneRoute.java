@@ -16,7 +16,9 @@ public class AirplaneRoute {
     private String startpt;
     @Column(name = "endpt")
     private String endpt;
-    @Column(name = "ticketid")
+    
+    @OneToOne
+    @JoinColumn(name = "ticketid", referencedColumnName = "ticketid")
     private int ticketid;
 
     public int getRouteid() {
