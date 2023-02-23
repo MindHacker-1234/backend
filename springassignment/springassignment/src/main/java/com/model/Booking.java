@@ -15,7 +15,9 @@ public class Booking {
     private int ticketamount;
     @Column(name = "ticketStatus")
     private String ticketStatus;
-    @Column(name = "passengerid")
+    
+    @OneToOne
+    @JoinColumn(name = "passengerid", referencedColumnName = "passengerid")
     private int passengerId;
 
     public int getTicketId() {
